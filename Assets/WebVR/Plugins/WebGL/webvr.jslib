@@ -18,5 +18,13 @@ mergeInto(LibraryManager.library, {
 
   ShowPanel: function (panelId) {
     document.dispatchEvent(new CustomEvent('Unity', {detail: {type: 'ShowPanel', panelId: Pointer_stringify(panelId)}}));
+  },
+  
+  VRStateFromBrowser: function () {   
+    var returnStr = getVRState(); 
+    var bufferSize = lengthBytesUTF8(returnStr) + 1;
+    var buffer = _malloc(bufferSize);
+    stringToUTF8(returnStr, buffer, bufferSize);
+    return buffer; 
   }
 });

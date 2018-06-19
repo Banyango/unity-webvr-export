@@ -62,8 +62,12 @@
       console.error('Error occurred upon scene load:\n', err);
     });
   }
+  
+    function getVRState() {
+      return (!vrDisplay && !vrDisplay.isPresenting) ? 'ENABLED' : 'NORMAL';
+    }
 
-  function onUnity (msg) {
+    function onUnity (msg) {
     // This way of passing messages is deprecated. Use rich objects instead.
     if (typeof msg.detail === 'string') {
       // Measure Round-Trip Time from Unity.

@@ -5,13 +5,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
+/// <summary>
+/// Represents the state of VR in the browser and in the game.
+/// Note: the VRStateFromBrowser method returns a string of these types
+/// so update webvr.js if you update the enum.
+/// </summary>
 public enum WebVRState { ENABLED, NORMAL }
 
 public class WebVRManager : MonoBehaviour
 {
     [Tooltip("Name of the key used to alternate between VR and normal mode. Leave blank to disable.")]
     public string toggleVRKeyName;
-
+    
+    [DllImport("__Internal")]
+    private static extern string VRStateFromBrowser();
+    
     [HideInInspector]
     public WebVRState vrState = WebVRState.NORMAL;
     
@@ -76,6 +84,16 @@ public class WebVRManager : MonoBehaviour
         {
             DontDestroyOnLoad(instance);
         }
+        
+        #if !UNITY_EDITOR && UNITY_WEBGL
+        setVrState(EnumFromString<WebVRState>(VRStateFromBrowser()));
+        Debug.Log("VRState initialized to : " + vrState);
+		#endif
+    }
+
+    private T EnumFromString<T>(string stringValue)
+    {
+        return (T) Enum.Parse(typeof(T), stringValue);
     }
 
     // Handles WebVR data from browser
